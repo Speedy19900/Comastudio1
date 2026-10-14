@@ -1,0 +1,616 @@
+<title>Coma Studio</title>
+<meta name="description" content="Coma Studio — frizerski salon u strogom centru Beograda, Gospodar Jevremova 59.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Jost:wght@400;500&display=swap">
+<style>
+/* Layout: editorial magazine spread — asymmetric image/text columns; bands alternate ivory, espresso, champagne so no two neighbours blend */
+:root{
+  --ivory:#F8F3EA;
+  --champagne:#EEE3CE;
+  --espresso:#1D1712;
+  --espresso-2:#2A221B;
+  --ink:#211A14;
+  --ink-soft:#54483D;
+  --gold:#C29D5A;        /* brand gold: lines, accents, buttons on dark */
+  --gold-ink:#715424;    /* brand gold darkened for small text on light (AA) */
+  --line:#D3C3A4;
+  --line-dark:#463829;
+  --on-dark:#F1E9DA;
+  --on-dark-soft:#C1B29D;
+  --display:"Newsreader", "Iowan Old Style", Georgia, serif;
+  --body:"Jost", "Futura", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --gutter:clamp(16px,4vw,56px);
+  --max:1240px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ivory);color:var(--ink);font-family:var(--body);font-weight:400;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,canvas{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.05;margin:0;text-wrap:balance;letter-spacing:-.015em}
+h2{font-size:clamp(2.1rem,4vw,3.5rem)}
+h3{font-size:clamp(1.55rem,2.1vw,1.9rem);line-height:1.15}
+p{margin:0}
+em{font-style:italic}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:var(--gold-ink)}
+.eyebrow::before{content:"";width:28px;height:1px;background:currentColor}
+.dark .eyebrow{color:var(--gold)}
+.lede{color:var(--ink-soft);max-width:48ch}
+.dark .lede{color:var(--on-dark-soft)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.7em;min-height:48px;font:500 .78rem/1 var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:0 1.6em;border:1px solid var(--ink);color:var(--ink);background:transparent;cursor:pointer;transition:background .3s,color .3s,border-color .3s}
+.btn:hover{background:var(--ink);color:var(--ivory)}
+.btn.solid{background:var(--ink);color:var(--ivory)}
+.btn.solid:hover{background:var(--gold-ink);border-color:var(--gold-ink)}
+.dark .btn{border-color:var(--gold);color:var(--on-dark)}
+.dark .btn:hover{background:var(--on-dark);border-color:var(--on-dark);color:var(--espresso)}
+.dark .btn.gold{background:var(--gold);color:var(--espresso)}
+.dark .btn.gold:hover{background:var(--on-dark);border-color:var(--on-dark)}
+.link{display:inline-flex;gap:.5em;font-weight:500;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:.3em;transition:color .3s}
+.link:hover{color:var(--gold-ink)}
+
+/* ---------- Header ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--ivory) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s}
+.top.scrolled{border-bottom-color:var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;height:74px}
+.mark{display:flex;align-items:center;gap:.7em;text-decoration:none;color:var(--ink)}
+.mark b{font:500 1.5rem/1 var(--display);letter-spacing:.24em}
+.mark span{font-size:.6rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold-ink);font-weight:500;border-left:1px solid var(--gold);padding-left:.9em}
+.nav{display:flex;align-items:center;gap:clamp(18px,2.6vw,36px)}
+.nav a{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;position:relative}
+.nav a:not(.btn)::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.nav a:not(.btn):hover::after{transform:scaleX(1)}
+.nav .btn{min-height:42px;padding:0 1.2em}
+.menu-btn{display:none;background:none;border:0;min-height:44px;padding:0 10px;margin-right:-10px;cursor:pointer;color:var(--ink);font:500 .74rem var(--body);letter-spacing:.2em;text-transform:uppercase}
+@media (max-width:860px){
+  .menu-btn{display:block}
+  .nav{position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;background:var(--ivory);border-bottom:1px solid var(--line);padding:8px var(--gutter) 24px;transform-origin:top;transform:perspective(900px) rotateX(-75deg);opacity:0;visibility:hidden;transition:transform .45s var(--ease),opacity .3s,visibility 0s .45s}
+  .nav.open{transform:none;opacity:1;visibility:visible;transition:transform .45s var(--ease),opacity .3s}
+  .nav a:not(.btn){padding:16px 0;border-bottom:1px solid var(--line);font-size:.85rem}
+  .nav a:not(.btn)::after{display:none}
+  .nav .btn{margin-top:20px;min-height:48px}
+}
+
+/* ---------- Image frames (placeholders until real photos arrive) ---------- */
+.frame{position:relative;margin:0;overflow:hidden;background:var(--champagne)}
+.frame canvas{position:absolute;inset:0;width:100%;height:100%}
+.frame img{width:100%;height:100%;object-fit:cover}
+.frame[data-label]::after{content:attr(data-label);position:absolute;left:14px;bottom:12px;font:500 .6rem/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:#F1E9DA;background:rgba(29,23,18,.55);padding:6px 8px}
+
+/* ---------- Hero ---------- */
+.hero{padding-block:clamp(36px,6vw,80px) clamp(56px,7vw,96px)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:clamp(32px,6vw,96px);align-items:center}
+.hero-copy{display:flex;flex-direction:column;align-items:flex-start;gap:26px}
+.hero h1{font-size:clamp(2.6rem,4.9vw,4.6rem);line-height:1.02}
+.hero h1 em{color:var(--gold-ink)}
+.hero-copy .lede{font-size:1.06rem;max-width:40ch}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+.hero-meta{align-self:stretch;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;border-top:1px solid var(--line);padding-top:18px;margin-top:6px}
+.hero-meta div{display:flex;flex-direction:column;gap:2px;font-size:.92rem}
+.hero-meta dt{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-ink);font-weight:500}
+.hero-meta dd{margin:0}
+.hero-visual{position:relative;padding:0 0 18px 18px}
+.hero-visual::before{content:"";position:absolute;left:0;bottom:0;top:18px;right:18px;border:1px solid var(--gold)}
+.hero-img{aspect-ratio:4/5;max-height:76vh;width:100%}
+.hero-img .unveil{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);pointer-events:none}
+.hero-img .unveil i{background:var(--ivory);transform-origin:top;animation:lift 1.1s cubic-bezier(.7,0,.2,1) forwards}
+.hero-img .unveil i:nth-child(2){animation-delay:.09s}.hero-img .unveil i:nth-child(3){animation-delay:.18s}.hero-img .unveil i:nth-child(4){animation-delay:.27s}
+@keyframes lift{to{transform:scaleY(0)}}
+@media (max-width:860px){
+  .hero .wrap{grid-template-columns:1fr}
+  .hero-img{aspect-ratio:4/3.6;max-height:none}
+  .hero-visual{padding:0 0 10px 10px}
+  .hero-visual::before{top:10px;right:10px}
+}
+
+/* ---------- Service index band ---------- */
+.band{padding-block:0}
+.band ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.band li+li{border-left:1px solid var(--line-dark)}
+.band a{display:flex;flex-direction:column;gap:6px;padding:24px clamp(14px,2vw,28px);text-decoration:none;transition:background .3s}
+.band a:hover{background:var(--espresso-2)}
+.band strong{font:400 clamp(1.25rem,1.9vw,1.6rem)/1.1 var(--display)}
+.band small{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+@media (max-width:860px){
+  .band ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .band li:nth-child(3){border-left:0}
+  .band li:nth-child(n+3){border-top:1px solid var(--line-dark)}
+  .band a{padding:20px 14px}
+}
+
+/* ---------- Salon intro ---------- */
+.salon{padding-block:clamp(72px,10vw,130px)}
+.salon .wrap{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(16px,2vw,28px);align-items:start}
+.salon-main{grid-column:1/8;aspect-ratio:5/4}
+.salon-copy{grid-column:9/13;display:flex;flex-direction:column;gap:22px;padding-top:clamp(0px,2vw,24px)}
+.salon-detail{width:72%;align-self:flex-end;aspect-ratio:4/5}
+.salon-note{grid-column:1/8;display:flex;flex-wrap:wrap;gap:8px 28px;border-top:1px solid var(--line);padding-top:16px;margin-top:-6px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.salon-note span:first-child{color:var(--gold-ink);font-weight:500}
+.salon-copy-wrap{grid-column:9/13;grid-row:1/3;display:flex;flex-direction:column;gap:28px}
+@media (max-width:860px){
+  .salon-main{grid-column:1/13}
+  .salon-note{grid-column:1/13}
+  .salon-copy-wrap{grid-column:1/13;grid-row:auto}
+  .salon-detail{display:none}
+}
+
+/* ---------- Services with fold-out panels (signature interaction) ---------- */
+.services{background:var(--champagne);padding-block:clamp(72px,10vw,130px)}
+.services-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 60px;align-items:end;margin-bottom:clamp(36px,5vw,60px)}
+.services-head>div{display:flex;flex-direction:column;gap:14px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,1.8vw,24px);align-items:start}
+.card{background:var(--ivory);display:flex;flex-direction:column;min-width:0;border:1px solid transparent;transition:border-color .4s}
+.card:hover,.card.open{border-color:var(--gold)}
+.card:nth-child(even){margin-top:clamp(0px,4vw,52px)}
+.card .frame{aspect-ratio:4/5}
+.card-body{padding:22px 22px 20px;display:flex;flex-direction:column;gap:6px}
+.card .eyebrow{font-size:.64rem}
+.card .eyebrow::before{width:16px}
+.fold-btn{margin-top:12px;align-self:flex-start;display:inline-flex;align-items:center;gap:10px;min-height:36px;background:none;border:0;padding:0;cursor:pointer;color:var(--ink);font:500 .72rem/1 var(--body);letter-spacing:.18em;text-transform:uppercase;border-bottom:1px solid var(--gold)}
+.fold-btn svg{width:11px;height:11px;transition:transform .5s var(--ease)}
+.fold-btn[aria-expanded="true"] svg{transform:rotate(45deg)}
+.fold{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease);perspective:900px}
+.fold>div{overflow:hidden;min-height:0}
+.flap{position:relative;padding:18px 22px 24px;color:var(--ink-soft);font-size:.95rem;transform-origin:top center;transform:rotateX(-88deg);opacity:0;transition:transform .7s var(--ease),opacity .45s;background:linear-gradient(to bottom,color-mix(in srgb,var(--champagne) 60%,var(--ivory)),var(--ivory) 45%)}
+.flap::before{content:"";position:absolute;left:22px;right:22px;top:0;height:1px;background:var(--gold)}
+.card.open .fold{grid-template-rows:1fr}
+.card.open .flap{transform:none;opacity:1}
+@media (max-width:1000px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.card:nth-child(even){margin-top:40px}}
+@media (max-width:860px){.services-head{grid-template-columns:1fr}}
+@media (max-width:560px){.cards{grid-template-columns:1fr}.card:nth-child(even){margin-top:0}.card .frame{aspect-ratio:16/11}}
+
+/* ---------- About (dark) ---------- */
+.dark{background:var(--espresso);color:var(--on-dark)}
+.about{padding-block:clamp(80px,10vw,140px)}
+.about .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(36px,7vw,110px);align-items:start}
+.about-img{aspect-ratio:3/4;position:sticky;top:110px;outline:1px solid var(--gold);outline-offset:-14px}
+.about-copy{display:flex;flex-direction:column;gap:26px}
+.about h2 em{color:var(--gold)}
+.about-copy>p{color:var(--on-dark-soft);max-width:58ch}
+.pull{font:italic 400 clamp(1.45rem,2.6vw,2.1rem)/1.25 var(--display);color:var(--on-dark)!important;border-left:1px solid var(--gold);padding-left:clamp(18px,2.5vw,32px);margin:8px 0;max-width:30ch}
+.team{list-style:none;margin:12px 0 0;padding:0;border-top:1px solid var(--line-dark)}
+.team li{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 20px;padding:18px 0;border-bottom:1px solid var(--line-dark)}
+.team strong{font:400 clamp(1.25rem,2vw,1.55rem)/1.2 var(--display)}
+.team span{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+@media (max-width:860px){.about .wrap{grid-template-columns:1fr}.about-img{position:relative;top:0;aspect-ratio:4/3}}
+
+/* ---------- Works reel ---------- */
+.works{padding-block:clamp(80px,10vw,140px) clamp(64px,8vw,110px)}
+.works-head{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:24px clamp(32px,6vw,90px);align-items:end;margin-bottom:clamp(32px,4vw,52px)}
+.works-head>div{display:flex;flex-direction:column;gap:14px}
+.quote{margin:0;border-left:1px solid var(--gold);padding-left:clamp(18px,2.5vw,30px)}
+.quote p{font:italic 400 clamp(1.25rem,2.1vw,1.75rem)/1.3 var(--display);text-wrap:balance}
+.reel{--reel-pad:max(var(--gutter),calc((100vw - var(--max))/2 + var(--gutter)));display:flex;gap:clamp(14px,2vw,28px);overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--reel-pad);padding-inline:var(--reel-pad);padding-bottom:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.reel::-webkit-scrollbar{display:none}
+.reel:focus-visible{outline-offset:-2px}
+.piece{flex:0 0 auto;width:clamp(260px,32vw,440px);scroll-snap-align:start;margin:0;display:flex;flex-direction:column;gap:14px}
+.piece.wide{width:clamp(300px,52vw,720px)}
+.piece .frame{aspect-ratio:4/5}
+.piece.wide .frame{aspect-ratio:4/3.06}
+.piece .frame canvas{transition:transform 1.2s var(--ease)}
+.piece:hover .frame canvas{transform:scale(1.03)}
+.piece figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border-top:1px solid var(--line);padding-top:12px}
+.piece figcaption strong{font:400 1.35rem/1.2 var(--display)}
+.piece figcaption span{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);text-align:right}
+.reel-ctrl{display:flex;align-items:center;gap:18px;margin-top:28px}
+.reel-ctrl button{width:48px;height:48px;border:1px solid var(--ink);background:none;cursor:pointer;color:var(--ink);display:grid;place-items:center;transition:background .3s,color .3s}
+.reel-ctrl button:hover{background:var(--ink);color:var(--ivory)}
+.reel-ctrl button:disabled{opacity:.3;cursor:default;background:none;color:var(--ink)}
+.reel-ctrl svg{width:16px;height:16px}
+.track{flex:1;height:1px;background:var(--line);position:relative;overflow:hidden}
+.track i{position:absolute;left:0;top:0;bottom:0;width:30%;background:var(--gold-ink);transform-origin:left;transition:transform .2s linear}
+.reel-ctrl .link{margin-left:auto}
+@media (max-width:860px){
+  .works-head{grid-template-columns:1fr}
+  .piece{width:78vw}.piece.wide{width:88vw}
+  .reel-ctrl .link{display:none}
+}
+
+/* ---------- Contact ---------- */
+.contact{background:var(--champagne);padding-block:clamp(80px,10vw,140px)}
+.contact .wrap{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:clamp(36px,6vw,90px);align-items:start}
+.contact-copy{display:flex;flex-direction:column;gap:18px}
+.contact h2 em{color:var(--gold-ink)}
+.lines{display:grid;margin:18px 0 0;border-top:1px solid var(--line)}
+.line{display:grid;grid-template-columns:7rem minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.line dt{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-ink);font-weight:500}
+.line dd{margin:0;font-size:1.05rem;min-width:0;overflow-wrap:anywhere}
+.line dd a{text-decoration:none}
+.line dd a:hover{text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:4px}
+.copy{background:none;border:1px solid var(--line);min-height:34px;padding:0 10px;cursor:pointer;font:500 .6rem/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.copy:hover{border-color:var(--ink);color:var(--ink)}
+.hours{padding:clamp(28px,4vw,46px);display:flex;flex-direction:column;gap:22px;outline:1px solid var(--gold);outline-offset:-10px}
+.hours table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.hours td{padding:14px 0;border-bottom:1px solid var(--line-dark)}
+.hours td:last-child{text-align:right;color:var(--on-dark)}
+.hours td:first-child{color:var(--on-dark-soft)}
+.hours tr.off td:last-child{color:var(--gold)}
+.hours .actions{display:flex;flex-wrap:wrap;gap:12px}
+.hours .actions .btn{flex:1 1 180px}
+@media (max-width:900px){.contact .wrap{grid-template-columns:1fr}}
+@media (max-width:480px){.line{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}.line dt{grid-column:1/3}}
+
+/* ---------- Footer ---------- */
+.foot{padding-block:56px 40px;border-top:1px solid var(--line-dark);color:var(--on-dark-soft)}
+.foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:28px}
+.foot .mark{color:var(--on-dark)}
+.foot .mark span{color:var(--gold)}
+.foot nav{display:flex;flex-wrap:wrap;gap:10px 28px}
+.foot nav a{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding-block:8px}
+.foot nav a:hover{color:var(--gold)}
+.foot small{width:100%;font-size:.78rem;border-top:1px solid var(--line-dark);padding-top:22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+
+/* ---------- Restrained scroll reveal (content stays visible without JS) ---------- */
+.rv{transition:transform 1s var(--ease),opacity 1s}
+.rv.pre{transform:translateY(26px);opacity:.25}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
+  .rv.pre{transform:none;opacity:1}
+}
+</style>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="mark" href="#pocetak" aria-label="Coma Studio, početak stranice"><b>COMA</b><span>Studio</span></a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Meni</button>
+    <nav class="nav" id="nav" aria-label="Glavna navigacija">
+      <a href="#salon">Salon</a>
+      <a href="#usluge">Usluge</a>
+      <a href="#radovi">Radovi</a>
+      <a href="#kontakt">Kontakt</a>
+      <a href="https://comastudio.rs/en/" lang="en">ENG</a>
+      <a class="btn solid" href="#kontakt">Zakažite termin</a>
+    </nav>
+  </div>
+</header>
+
+<main id="pocetak">
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">Frizerski salon · Beograd</span>
+        <h1 id="hero-title">Kosa kao <em>znak</em> prepoznavanja.</h1>
+        <p class="lede">Šišanje, boja, stilizovanje i microblading, uz individualan pristup koji gradi vaš sopstveni stil.</p>
+        <div class="hero-actions">
+          <a class="btn solid" href="#kontakt">Zakažite termin</a>
+          <a class="btn" href="#usluge">Pogledajte usluge</a>
+        </div>
+        <dl class="hero-meta">
+          <div><dt>Adresa</dt><dd>Gospodar Jevremova 59</dd></div>
+          <div><dt>Radno vreme</dt><dd>Pon–Pet 10–19 · Sub 9–15</dd></div>
+        </dl>
+      </div>
+      <div class="hero-visual">
+        <!-- Zamena slike: obrišite <canvas> i ubacite <img src="slike/hero.jpg" alt="..." width="1200" height="1500"> -->
+        <figure class="frame hero-img" data-label="Mesto za fotografiju · kampanja">
+          <canvas data-art="dark" data-shape="flow" data-seed="7" aria-hidden="true"></canvas>
+          <div class="unveil" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICE INDEX BAND -->
+  <nav class="band dark" aria-label="Usluge ukratko">
+    <div class="wrap">
+      <ul>
+        <li><a href="#usluga-sisanje"><strong>Šišanje</strong><small>Individualan pristup</small></a></li>
+        <li><a href="#usluga-farbanje"><strong>Farbanje</strong><small>Postojana boja</small></a></li>
+        <li><a href="#usluga-stilizovanje"><strong>Stilizovanje</strong><small>Za sve prilike</small></a></li>
+        <li><a href="#usluga-microblading"><strong>Microblading</strong><small>Obrve</small></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- SALON -->
+  <section class="salon" id="salon" aria-labelledby="salon-title">
+    <div class="wrap">
+      <figure class="frame salon-main rv" data-label="Mesto za fotografiju · enterijer salona">
+        <canvas data-art="warm" data-shape="flow" data-seed="19" aria-hidden="true"></canvas>
+      </figure>
+      <div class="salon-copy-wrap">
+        <div class="salon-copy rv">
+          <span class="eyebrow">Salon</span>
+          <h2 id="salon-title">Inspiracija i kreativnost u <em>svakom</em> potezu.</h2>
+          <p class="lede">Strogi centar grada, ugao Francuske i Gospodar Jevremove. Prijatan ambijent, profesionalan pristup i preporuke stalnih klijenata.</p>
+          <p class="lede">Pratimo najnovije trendove i stalno se usavršavamo na domaćim i internacionalnim seminarima, zato je naš rad uvek primećen i prepoznatljiv.</p>
+        </div>
+        <figure class="frame salon-detail rv" data-label="Detalj">
+          <canvas data-art="light" data-shape="curl" data-seed="5" aria-hidden="true"></canvas>
+        </figure>
+      </div>
+      <p class="salon-note"><span>Coma Studio</span><span>Gospodar Jevremova 59</span><span>Beograd</span></p>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="usluge" aria-labelledby="usluge-title">
+    <div class="wrap">
+      <div class="services-head">
+        <div><span class="eyebrow">Usluge</span><h2 id="usluge-title">Šta radimo</h2></div>
+        <p class="lede">Dugogodišnje iskustvo i stalno usavršavanje doneli su nov pristup stilizovanju i nezi kose. Ponudu smo proširili i microbladingom, ulepšavanjem obrva.</p>
+      </div>
+      <div class="cards">
+        <article class="card open rv" id="usluga-sisanje">
+          <figure class="frame"><canvas data-art="light" data-shape="flow" data-seed="31" aria-hidden="true"></canvas></figure>
+          <div class="card-body">
+            <span class="eyebrow">Individualan pristup</span>
+            <h3>Šišanje</h3>
+            <button class="fold-btn" aria-expanded="true" aria-controls="f1">Detaljnije <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0v12M0 6h12" stroke="currentColor" fill="none"/></svg></button>
+          </div>
+          <div class="fold" id="f1"><div><p class="flap">Frizura je važan deo stila. Primenjujemo najnovija znanja i veštine i radimo individualno, da biste dobili frizuru koja je zaista najbolja za vas.</p></div></div>
+        </article>
+        <article class="card rv" id="usluga-farbanje">
+          <figure class="frame"><canvas data-art="light" data-shape="swatch" data-seed="42" aria-hidden="true"></canvas></figure>
+          <div class="card-body">
+            <span class="eyebrow">Postojana boja</span>
+            <h3>Farbanje</h3>
+            <button class="fold-btn" aria-expanded="false" aria-controls="f2">Detaljnije <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0v12M0 6h12" stroke="currentColor" fill="none"/></svg></button>
+          </div>
+          <div class="fold" id="f2"><div><p class="flap">Promena boje, osvežavanje prelivom, pramenovi i neutralizacija nepoželjnih tonova. Uz to i tretmani za revitalizaciju kose.</p></div></div>
+        </article>
+        <article class="card rv" id="usluga-stilizovanje">
+          <figure class="frame"><canvas data-art="dark" data-shape="curl" data-seed="53" aria-hidden="true"></canvas></figure>
+          <div class="card-body">
+            <span class="eyebrow">Za sve prilike</span>
+            <h3>Stilizovanje</h3>
+            <button class="fold-btn" aria-expanded="false" aria-controls="f3">Detaljnije <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0v12M0 6h12" stroke="currentColor" fill="none"/></svg></button>
+          </div>
+          <div class="fold" id="f3"><div><p class="flap">U nekoliko stručnih poteza pravimo frizuru iz snova za maturu, proslavu ili venčanje.</p></div></div>
+        </article>
+        <article class="card rv" id="usluga-microblading">
+          <figure class="frame"><canvas data-art="light" data-shape="brow" data-seed="64" aria-hidden="true"></canvas></figure>
+          <div class="card-body">
+            <span class="eyebrow">Obrve</span>
+            <h3>Microblading</h3>
+            <button class="fold-btn" aria-expanded="false" aria-controls="f4">Detaljnije <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0v12M0 6h12" stroke="currentColor" fill="none"/></svg></button>
+          </div>
+          <div class="fold" id="f4"><div><p class="flap">Precizna metoda docrtavanja i oblikovanja prirodnih obrva, dlačicu po dlačicu. Savršeno rešenje za retke i svetle obrve.</p></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about dark" aria-labelledby="onama-title">
+    <div class="wrap">
+      <figure class="frame about-img rv" data-label="Mesto za fotografiju · tim">
+        <canvas data-art="warm" data-shape="flow" data-seed="77" aria-hidden="true"></canvas>
+      </figure>
+      <div class="about-copy">
+        <span class="eyebrow">O nama</span>
+        <h2 id="onama-title">Stil se gradi, <em>ne kopira</em>.</h2>
+        <p>Damjan Kecman, vlasnik i kreativni direktor salona, svoj ugled je stekao dugogodišnjom saradnjom sa velikim imenima visoke mode. Iza njega su brojna modna dešavanja i seminari, kao i saradnja sa televizijom, časopisima i revijama.</p>
+        <p class="pull">Moderno ne mora biti i dobro za vas.</p>
+        <p>Zato vas usmeravamo ka sopstvenom stilu. Budite prepoznatljivi kroz različite trendove, uvek sa zdravom i lepom kosom. To prepustite nama.</p>
+        <ul class="team" aria-label="Tim">
+          <li><strong>Damjan Kecman</strong><span>Vlasnik · kreativni direktor</span></li>
+          <li><strong>Julijana Kecman</strong><span>Tim salona</span></li>
+          <li><strong>Ljiljana Ljilja</strong><span>Tim salona</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKS -->
+  <section class="works" id="radovi" aria-labelledby="radovi-title">
+    <div class="wrap works-head">
+      <div><span class="eyebrow">Kreativnost · umetnost · strast</span><h2 id="radovi-title">Naši radovi</h2></div>
+      <blockquote class="quote"><p>Kako mogu da kontrolišem svoj život, kada ne mogu da kontrolišem svoju kosu?</p></blockquote>
+    </div>
+    <!-- Zamena: u svakom .piece obrišite <canvas> i ubacite <img src="slike/rad-1.jpg" alt="..." loading="lazy"> -->
+    <div class="reel" id="reel" tabindex="0" aria-label="Galerija radova, pomerajte vodoravno">
+      <figure class="piece wide"><div class="frame" data-label="Mesto za fotografiju rada"><canvas data-art="dark" data-shape="flow" data-seed="88" aria-hidden="true"></canvas></div><figcaption><strong>Boja</strong><span>Preliv i pramenovi</span></figcaption></figure>
+      <figure class="piece"><div class="frame" data-label="Mesto za fotografiju rada"><canvas data-art="light" data-shape="flow" data-seed="91" aria-hidden="true"></canvas></div><figcaption><strong>Šišanje</strong><span>Individualan pristup</span></figcaption></figure>
+      <figure class="piece"><div class="frame" data-label="Mesto za fotografiju rada"><canvas data-art="warm" data-shape="curl" data-seed="95" aria-hidden="true"></canvas></div><figcaption><strong>Svečana frizura</strong><span>Matura · venčanje</span></figcaption></figure>
+      <figure class="piece wide"><div class="frame" data-label="Mesto za fotografiju rada"><canvas data-art="light" data-shape="swatch" data-seed="101" aria-hidden="true"></canvas></div><figcaption><strong>Farbanje</strong><span>Neutralizacija tonova</span></figcaption></figure>
+      <figure class="piece"><div class="frame" data-label="Mesto za fotografiju rada"><canvas data-art="light" data-shape="brow" data-seed="107" aria-hidden="true"></canvas></div><figcaption><strong>Microblading</strong><span>Obrve</span></figcaption></figure>
+      <figure class="piece"><div class="frame" data-label="Mesto za fotografiju rada"><canvas data-art="dark" data-shape="curl" data-seed="113" aria-hidden="true"></canvas></div><figcaption><strong>Stilizovanje</strong><span>Za sve prilike</span></figcaption></figure>
+    </div>
+    <div class="wrap">
+      <div class="reel-ctrl">
+        <button type="button" id="prev" aria-label="Prethodni rad"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2 4 8l6 6" stroke="currentColor" fill="none" stroke-width="1.3"/></svg></button>
+        <button type="button" id="next" aria-label="Sledeći rad"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 2 6 6-6 6" stroke="currentColor" fill="none" stroke-width="1.3"/></svg></button>
+        <div class="track" aria-hidden="true"><i id="trackBar"></i></div>
+        <a class="link" href="https://www.facebook.com/saloncoma" target="_blank" rel="noopener">Više na Facebooku ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="kontakt" aria-labelledby="kontakt-title">
+    <div class="wrap">
+      <div class="contact-copy">
+        <span class="eyebrow">Kontakt i zakazivanje</span>
+        <h2 id="kontakt-title">Vidimo se u <em>salonu</em>.</h2>
+        <p class="lede">Termine zakazujemo telefonom. Pozovite salon ili nam pišite, i pronaći ćemo vreme koje vam odgovara.</p>
+        <dl class="lines">
+          <div class="line"><dt>Adresa</dt><dd>Gospodar Jevremova 59, Beograd</dd><button class="copy" data-copy="Gospodar Jevremova 59, Beograd">Kopiraj</button></div>
+          <div class="line"><dt>Telefon</dt><dd><a href="tel:+381112632237">(011) 2632-237</a></dd><button class="copy" data-copy="+381112632237">Kopiraj</button></div>
+          <div class="line"><dt>Mobilni</dt><dd><a href="tel:+38163263319">(063) 263-319</a></dd><button class="copy" data-copy="+38163263319">Kopiraj</button></div>
+          <div class="line"><dt>Email</dt><dd><a href="mailto:damjan@studiocoma.rs">damjan@studiocoma.rs</a></dd><button class="copy" data-copy="damjan@studiocoma.rs">Kopiraj</button></div>
+        </dl>
+      </div>
+      <div class="hours dark">
+        <span class="eyebrow">Radno vreme</span>
+        <h3>Ugao Francuske i Gospodar Jevremove</h3>
+        <table>
+          <tr><td>Ponedeljak – Petak</td><td>10:00 – 19:00</td></tr>
+          <tr><td>Subota</td><td>09:00 – 15:00</td></tr>
+          <tr class="off"><td>Nedelja</td><td>Ne radimo</td></tr>
+        </table>
+        <div class="actions">
+          <a class="btn gold" href="tel:+381112632237">Pozovite salon</a>
+          <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Gospodar+Jevremova+59%2C+Beograd" target="_blank" rel="noopener">Kako do nas ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot dark">
+  <div class="wrap">
+    <a class="mark" href="#pocetak"><b>COMA</b><span>Studio</span></a>
+    <nav aria-label="Footer">
+      <a href="#usluge">Usluge</a>
+      <a href="#radovi">Radovi</a>
+      <a href="#kontakt">Kontakt</a>
+      <a href="https://www.facebook.com/saloncoma" target="_blank" rel="noopener">Facebook ↗</a>
+    </nav>
+    <small><span>© Coma Studio · Gospodar Jevremova 59, Beograd</span><span>Hvala na poverenju.</span></small>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // Header state + mobile menu
+  const top = document.getElementById('top');
+  const onScroll = () => top.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll(); addEventListener('scroll', onScroll, {passive:true});
+  const menuBtn = document.getElementById('menuBtn'), nav = document.getElementById('nav');
+  const setMenu = open => { nav.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', open); menuBtn.textContent = open ? 'Zatvori' : 'Meni'; };
+  menuBtn.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+  nav.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+
+  // Fold-out service panels
+  const openCard = (card, open) => {
+    card.classList.toggle('open', open);
+    card.querySelector('.fold-btn').setAttribute('aria-expanded', open);
+  };
+  document.querySelectorAll('.fold-btn').forEach(btn => btn.addEventListener('click', () => {
+    const card = btn.closest('.card'); openCard(card, !card.classList.contains('open'));
+  }));
+  // Service band links unfold the matching card
+  document.querySelectorAll('.band a').forEach(a => a.addEventListener('click', () => {
+    const card = document.querySelector(a.getAttribute('href')); if (card) openCard(card, true);
+  }));
+
+  // Copy buttons
+  document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', () => {
+    const done = () => { b.textContent = 'Kopirano'; setTimeout(() => b.textContent = 'Kopiraj', 1600); };
+    const fallback = () => { const dd = b.previousElementSibling; const r = document.createRange(); r.selectNodeContents(dd); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+    try { navigator.clipboard.writeText(b.dataset.copy).then(done, fallback); } catch (e) { fallback(); }
+  }));
+
+  // Works reel: arrows + gold progress line
+  const reel = document.getElementById('reel'), prev = document.getElementById('prev'), next = document.getElementById('next'), bar = document.getElementById('trackBar');
+  const step = () => (reel.querySelector('.piece')?.getBoundingClientRect().width || 300) + 24;
+  const syncReel = () => {
+    const max = reel.scrollWidth - reel.clientWidth, pos = max > 0 ? reel.scrollLeft / max : 0, share = reel.clientWidth / reel.scrollWidth;
+    bar.style.width = (share * 100) + '%';
+    bar.style.transform = `translateX(${pos * (1 / share - 1) * 100}%)`;
+    prev.disabled = reel.scrollLeft < 4; next.disabled = reel.scrollLeft > max - 4;
+  };
+  prev.addEventListener('click', () => reel.scrollBy({left:-step(), behavior:'smooth'}));
+  next.addEventListener('click', () => reel.scrollBy({left:step(), behavior:'smooth'}));
+  reel.addEventListener('scroll', syncReel, {passive:true});
+  reel.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { e.preventDefault(); next.click(); } if (e.key === 'ArrowLeft') { e.preventDefault(); prev.click(); } });
+  syncReel();
+
+  // Restrained reveal: only elements below the first screen get the "pre" state
+  const els = [...document.querySelectorAll('.rv')];
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target); } }), {rootMargin:'0px 0px -8% 0px'});
+    els.forEach(el => { if (el.getBoundingClientRect().top > innerHeight) { el.classList.add('pre'); io.observe(el); } });
+  }
+
+  // Placeholder art, painted until real photos replace each <canvas>.
+  // Each motif matches its service: flowing hair, colour swatch tresses, curls, brow strokes.
+  const palettes = {
+    dark:  {bg:['#2E241C','#16110D'], strands:['#C9A462','#9C7A41','#E3CFA3','#5C4630'], sheen:'rgba(227,207,163,.16)'},
+    light: {bg:['#F1E7D4','#DCCAA8'], strands:['#3A2B1F','#6B5038','#A5814A','#2A1F17'], sheen:'rgba(255,250,240,.45)'},
+    warm:  {bg:['#8B6B42','#2E2219'], strands:['#F0DEB8','#D2AF6E','#B08A50','#3B2B1E'], sheen:'rgba(240,222,184,.2)'}
+  };
+  const rng = s => () => (s = (s * 16807) % 2147483647) / 2147483647;
+  const shapes = {
+    flow(x, w, h, p, r) {
+      const amp = w*(.12 + r()*.16), freq = .8 + r()*1.1, phase = r()*Math.PI*2, center = w*(.3 + r()*.4), band = w*(.35 + r()*.35), tilt = (r()-.5)*w*.5;
+      const n = Math.round(110 + w/4);
+      for (let i = 0; i < n; i++) {
+        const off = (r()-.5)*band, jit = r()*.6, local = (r()-.5)*w*.04;
+        x.beginPath();
+        for (let y = -20; y <= h + 20; y += 6) {
+          const t = y/h, px = center + off*(1 - .45*Math.sin(t*Math.PI)) + amp*Math.sin(t*Math.PI*freq + phase + jit*.4) + tilt*t + local*Math.sin(t*9 + i);
+          y === -20 ? x.moveTo(px, y) : x.lineTo(px, y);
+        }
+        x.strokeStyle = p.strands[i % p.strands.length]; x.globalAlpha = .18 + r()*.5; x.lineWidth = .4 + r()*1.4; x.stroke();
+      }
+    },
+    swatch(x, w, h, p, r) {
+      const tones = ['#1C140F','#3A281C','#5C3F27','#86603A','#AE8653','#CDAB78','#E6D2AA'];
+      const n = tones.length, bw = w*.78/n, x0 = w*.11, top = h*.12;
+      x.fillStyle = 'rgba(33,26,20,.12)'; x.fillRect(x0 - 6, top - 10, w*.78 + 12, 10);
+      tones.forEach((tone, i) => {
+        const len = h*(.62 + .06*Math.sin(i*1.7)), bx = x0 + i*bw;
+        for (let k = 0; k < 46; k++) {
+          const u = r(), sx = bx + u*bw, edge = Math.abs(u - .5)*2, end = top + len*(1 - .35*edge*edge);
+          x.beginPath(); x.moveTo(sx, top);
+          x.quadraticCurveTo(sx + (r()-.5)*4, (top + end)/2, bx + bw/2 + (u - .5)*bw*.25, end);
+          x.strokeStyle = tone; x.globalAlpha = .45 + r()*.5; x.lineWidth = .5 + r()*1.1; x.stroke();
+        }
+      });
+    },
+    curl(x, w, h, p, r) {
+      const curls = 4 + Math.floor(r()*2);
+      for (let c = 0; c < curls; c++) {
+        const cx = w*(.14 + c*(.72/(curls - 1))) + (r()-.5)*w*.04, y0 = -h*.05 + r()*h*.08, R = w*(.045 + r()*.025), turns = 5 + r()*2, len = h*(.7 + r()*.25);
+        for (let s = 0; s < 22; s++) {
+          const ds = (r()-.5)*R*.5, ph = r()*.4;
+          x.beginPath();
+          for (let k = 0; k <= 260; k++) {
+            const t = k/260, th = t*turns*Math.PI*2 + ph, rad = R*(1 - .35*t) + ds;
+            const px = cx + rad*Math.cos(th), py = y0 + t*len + rad*.35*Math.sin(th);
+            k ? x.lineTo(px, py) : x.moveTo(px, py);
+          }
+          x.strokeStyle = p.strands[(s + c) % p.strands.length]; x.globalAlpha = .2 + r()*.45; x.lineWidth = .4 + r()*1.1; x.stroke();
+        }
+      }
+    },
+    brow(x, w, h, p, r) {
+      const arc = side => {
+        const cx = w/2 + side*w*.22, cy = h*.5, rx = w*.2, ry = h*.1;
+        for (let i = 0; i < 260; i++) {
+          const t = r(), a = Math.PI*(1.12 - t*.9), px = cx + side*rx*Math.cos(a)*-1, py = cy - ry*Math.sin(a) + (r()-.5)*h*.025*(1 - t*.6);
+          const thick = (1 - t)*.8 + .2, ang = (side > 0 ? -1 : 1)*(.35 + t*.9) - Math.PI/2, L = (12 + r()*14)*(w/360)*thick + 4;
+          x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(ang)*L*side*-1, py + Math.sin(ang)*L);
+          x.strokeStyle = p.strands[i % 2 ? 0 : 1]; x.globalAlpha = .35 + r()*.5; x.lineWidth = .6 + r()*.8*thick; x.stroke();
+        }
+      };
+      arc(-1); arc(1);
+      x.globalAlpha = .5; x.strokeStyle = '#A5814A'; x.lineWidth = 1;
+      x.beginPath(); x.moveTo(w*.12, h*.74); x.lineTo(w*.88, h*.74); x.stroke();
+    }
+  };
+  function paint(c) {
+    const box = c.parentElement.getBoundingClientRect();
+    const w = Math.max(1, Math.round(box.width)), h = Math.max(1, Math.round(box.height));
+    if (w < 2) return;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    c.width = w*dpr; c.height = h*dpr;
+    const x = c.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0);
+    const p = palettes[c.dataset.art] || palettes.dark, r = rng(+c.dataset.seed || 1);
+    const g = x.createLinearGradient(0,0,w*.4,h); g.addColorStop(0,p.bg[0]); g.addColorStop(1,p.bg[1]);
+    x.globalAlpha = 1; x.fillStyle = g; x.fillRect(0,0,w,h);
+    (shapes[c.dataset.shape] || shapes.flow)(x, w, h, p, r);
+    x.globalAlpha = 1;
+    const s = x.createRadialGradient(w*.62,h*.3,0,w*.62,h*.3,Math.max(w,h)*.7);
+    s.addColorStop(0,p.sheen); s.addColorStop(1,'rgba(0,0,0,0)');
+    x.fillStyle = s; x.fillRect(0,0,w,h);
+  }
+  const canvases = [...document.querySelectorAll('canvas[data-art]')];
+  const paintAll = () => { canvases.forEach(paint); syncReel(); };
+  paintAll();
+  let t, lastW = innerWidth;
+  addEventListener('resize', () => { if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(t); t = setTimeout(paintAll, 150); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(paintAll);
+})();
+</script>
